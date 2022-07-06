@@ -1,7 +1,9 @@
 #! /usr/bin/env python3
 # coding: utf-8
 
+import os
 import json
+
 from flask import (
     Flask,
     render_template,
@@ -11,15 +13,18 @@ from flask import (
     url_for
 )
 
+# sets this directory as the base for all relative paths
+BASE_DIR = os.path.abspath(os.path.dirname(__file__))
+
 
 def loadClubs():
-    with open('clubs.json') as c:
+    with open(os.path.join(BASE_DIR, 'clubs.json')) as c:
         listOfClubs = json.load(c)['clubs']
         return listOfClubs
 
 
 def loadCompetitions():
-    with open('competitions.json') as comps:
+    with open(os.path.join(BASE_DIR, 'competitions.json')) as comps:
         listOfCompetitions = json.load(comps)['competitions']
         return listOfCompetitions
 
