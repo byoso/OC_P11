@@ -38,11 +38,13 @@ clubs = loadClubs()
 
 @app.route('/')
 def index():
+    """displays the login form"""
     return render_template('index.html')
 
 
 @app.route('/showSummary', methods=['POST'])
 def showSummary():
+    """displays the summary if logged in"""
     club = [club for club in clubs
             if club['email'] == request.form['email']][0]
     return render_template(
