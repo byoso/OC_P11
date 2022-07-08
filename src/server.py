@@ -53,6 +53,7 @@ def showSummary():
 
 @app.route('/book/<competition>/<club>')
 def book(competition, club):
+    """displays the booking form"""
     foundClub = [c for c in clubs if c['name'] == club][0]
     foundCompetition = [c for c in competitions if c['name'] == competition][0]
     if foundClub and foundCompetition:
@@ -66,6 +67,7 @@ def book(competition, club):
 
 @app.route('/purchasePlaces', methods=['POST'])
 def purchasePlaces():
+    """Purchasing place slogic, should redirect to show summary"""
     competition = [c for c in competitions
                    if c['name'] == request.form['competition']][0]
     club = [c for c in clubs if c['name'] == request.form['club']][0]
