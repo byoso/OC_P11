@@ -46,9 +46,13 @@ def index():
 def showSummary():
     """displays the summary if logged in"""
     club = [club for club in clubs
-            if club['email'] == request.form['email']][0]
-    return render_template(
-        'welcome.html', club=club, competitions=competitions)
+            if club['email'] == request.form['email']]
+    if club:
+        return render_template(
+            'welcome.html', club=club[0], competitions=competitions)
+    else:
+        flash(f"Unknown email: '{request.form['email']}'")
+        return redirect(url_for('index'))
 
 
 @app.route('/book/<competition>/<club>')
