@@ -71,16 +71,25 @@ def book(competition, club):
 
 @app.route('/purchasePlaces', methods=['POST'])
 def purchasePlaces():
-    """Purchasing place slogic, should redirect to show summary"""
+    """Purchasing place slogic"""
     competition = [c for c in competitions
                    if c['name'] == request.form['competition']][0]
     club = [c for c in clubs if c['name'] == request.form['club']][0]
     placesRequired = int(request.form['places'])
-    competition['numberOfPlaces'] = int(
-        competition['numberOfPlaces'])-placesRequired
-    flash('Great-booking complete!')
-    return render_template(
-        'welcome.html', club=club, competitions=competitions)
+    if int(club['points']) >= placesRequired and placesRequired <= 12:
+        competition['numberOfPlaces'] = int(
+            competition['numberOfPlaces'])-placesRequired
+        club['points'] = int(club['points']) - placesRequired
+        flash('Great-booking complete!')
+        return render_template(
+            'welcome.html', club=club, competitions=competitions)
+    else:
+        flash(
+            f"Aborted: asked {placesRequired} places."
+            f" Your club owns {club['points']} points.")
+        return render_template(
+            'booking.html', club=club, competition=competition
+            )
 
 
 # TODO: Add route for points display

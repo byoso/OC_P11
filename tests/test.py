@@ -15,8 +15,9 @@ def test_showSummary(client, mocker):
     response = client.post("/showSummary", data={"email": "user@test.com"})
     assert response.status_code == 200
 
+    # redirect if wrong email
     response = client.post("/showSummary", data={"email": "not_user@test.com"})
-    assert response.status_code == 200
+    assert response.status_code == 302
 
 
 def test_book(client, mocker):
@@ -34,7 +35,11 @@ def test_purchase_places(client, mocker):
     response = client.post(
         '/purchasePlaces',
         data={'club': "Club_1", 'competition': 'Comp_1', 'places': '5'})
+
     assert response.status_code == 200
+    # points are consumed:
+    club = mocker_clubs[0]
+    assert club['points'] == 15
 
 
 def test_logout(client):
