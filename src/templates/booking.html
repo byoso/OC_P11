@@ -6,7 +6,10 @@
 </head>
 <body>
     <h2>{{competition['name']}}</h2>
-    Places available: {{competition['numberOfPlaces']}}
+    <p>Places available: {{competition['numberOfPlaces']}}</p>
+    <p>You booked {{ tickets_spent }} places in this competition (12 max)</p>
+    <p>Your club has {{ club['points'] }} points to spend.</p>
+
 
     {% with messages = get_flashed_messages()%}
     {% if messages %}

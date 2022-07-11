@@ -3,6 +3,8 @@
 
 import os
 import json
+from datetime import datetime
+
 
 from flask import (
     Flask,
@@ -49,7 +51,8 @@ def showSummary():
             if club['email'] == request.form['email']]
     if club:
         return render_template(
-            'welcome.html', club=club[0], competitions=competitions)
+            'welcome.html', club=club[0],
+            competitions=competitions)
     else:
         flash(f"Unknown email: '{request.form['email']}'")
         return redirect(url_for('index'))
@@ -61,8 +64,17 @@ def book(competition, club):
     foundClub = [c for c in clubs if c['name'] == club]
     foundCompetition = [c for c in competitions if c['name'] == competition]
     if foundClub and foundCompetition:
+        club = foundClub[0]
+        competition = foundCompetition[0]
+        try:
+            tickets_spent = competition['tickets_spent'][club['name']]
+        except KeyError:
+            competition['tickets_spent'] = {}
+            competition['tickets_spent'][club['name']] = 0
+            tickets_spent = 0
         return render_template(
-            'booking.html', club=foundClub[0], competition=foundCompetition[0])
+            'booking.html', club=club, competition=competition,
+            tickets_spent=tickets_spent)
     else:
         flash("Something went wrong-please try again")
         return render_template(
@@ -71,22 +83,31 @@ def book(competition, club):
 
 @app.route('/purchasePlaces', methods=['POST'])
 def purchasePlaces():
-    """Purchasing place slogic"""
+    """Purchasing some places slogic"""
     competition = [c for c in competitions
                    if c['name'] == request.form['competition']][0]
     club = [c for c in clubs if c['name'] == request.form['club']][0]
-    placesRequired = int(request.form['places'])
-    if int(club['points']) >= placesRequired and placesRequired <= 12:
+    try:
+        placesRequired = int(request.form['places'])
+    except ValueError:
+        placesRequired = 0
+        flash('Aborted: invalid value given')
+    tickets_spent = competition['tickets_spent'][club['name']]
+    if int(club['points']) >= placesRequired and\
+            placesRequired + tickets_spent <= 12:
         competition['numberOfPlaces'] = int(
             competition['numberOfPlaces'])-placesRequired
+        competition['tickets_spent'][club['name']] += placesRequired
         club['points'] = int(club['points']) - placesRequired
-        flash('Great-booking complete!')
+        if placesRequired != 0:
+            flash('Great-booking complete!')
         return render_template(
             'welcome.html', club=club, competitions=competitions)
     else:
         flash(
-            f"Aborted: asked {placesRequired} places."
-            f" Your club owns {club['points']} points.")
+            f"Aborted: asked {placesRequired} places (12 max)."
+            f" Your club owns {club['points']} points."
+            f" You spent {tickets_spent}/12 in this competition. ")
         return render_template(
             'booking.html', club=club, competition=competition
             )
