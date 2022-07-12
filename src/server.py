@@ -1,13 +1,9 @@
 #! /usr/bin/env python3
 # coding: utf-8
 
-import os
-import json
-from datetime import datetime
 
 from .datas import (
-    loadClubs,
-    loadCompetitions,
+    Data,
 )
 
 from flask import (
@@ -24,8 +20,7 @@ from flask import (
 app = Flask(__name__)
 app.secret_key = 'something_special'
 
-competitions = loadCompetitions()
-clubs = loadClubs()
+data = Data()
 
 
 @app.route('/')
@@ -37,12 +32,12 @@ def index():
 @app.route('/showSummary', methods=['POST'])
 def showSummary():
     """displays the summary if logged in"""
-    club = [club for club in clubs
+    club = [club for club in data.clubs
             if club.email == request.form['email']]
     if club:
         return render_template(
             'welcome.html', club=club[0],
-            competitions=competitions)
+            competitions=data.competitions)
     else:
         flash(f"Unknown email: '{request.form['email']}'")
         return redirect(url_for('index'))
@@ -51,8 +46,8 @@ def showSummary():
 @app.route('/book/<competition_name>/<club_name>')
 def book(competition_name, club_name):
     """displays the booking form"""
-    foundClub = [club for club in clubs if club.name == club_name]
-    foundCompetition = [comp for comp in competitions
+    foundClub = [club for club in data.clubs if club.name == club_name]
+    foundCompetition = [comp for comp in data.competitions
                         if comp.name == competition_name]
     if foundClub and foundCompetition:
         club = foundClub[0]
@@ -73,9 +68,9 @@ def book(competition_name, club_name):
 @app.route('/purchasePlaces', methods=['POST'])
 def purchasePlaces():
     """Purchasing some places slogic"""
-    competition = [comp for comp in competitions
+    competition = [comp for comp in data.competitions
                    if comp.name == request.form['competition']][0]
-    club = [c for c in clubs if c.name == request.form['club']][0]
+    club = [c for c in data.clubs if c.name == request.form['club']][0]
     try:
         placesRequired = int(request.form['places'])
     except ValueError:
@@ -91,14 +86,14 @@ def purchasePlaces():
         if placesRequired != 0:
             flash('Great-booking complete!')
         return render_template(
-            'welcome.html', club=club, competitions=competitions)
+            'welcome.html', club=club, competitions=data.competitions)
     else:
         flash(
             f"Aborted: asked {placesRequired} places (12 max)."
-            f" Your club owns {club.points} points."
-            f" You spent {tickets_spent}/12 in this competition. ")
+            )
         return render_template(
-            'booking.html', club=club, competition=competition
+            'booking.html', club=club, competition=competition,
+            tickets_spent=tickets_spent
             )
 
 
