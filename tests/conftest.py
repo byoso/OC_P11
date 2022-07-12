@@ -1,6 +1,7 @@
 import pytest
 
 from src.server import app
+from src.datas import Club, Competition
 
 
 @pytest.fixture
@@ -9,18 +10,20 @@ def client():
         yield client
 
 
-mocker_clubs = [
+clubs = [
     {
         "name": "Club_1",
         "email": "user@test.com",
         "points": 20
     },
 ]
+mocker_clubs = [Club(**club) for club in clubs]
 
-mocker_comps = [
+comps = [
         {
             "name": "Comp_1",
             "date": "2030-01-01 10:00:00",
             "numberOfPlaces": "25"
         },
 ]
+mocker_comps = [Competition(**comp) for comp in comps]
