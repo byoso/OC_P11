@@ -1,9 +1,8 @@
 #! /usr/bin/env python3
 # coding: utf-8
 
-from src import server, datas
-from tests.conftest import client, mocker_clubs, mocker_comps
-
+from src import server
+from tests.conftest import mocker_clubs, mocker_comps
 
 
 def test_index(client):
@@ -27,7 +26,7 @@ def test_book(client, mocker):
     response = client.get("/book/Comp_1/Club_1")
     assert response.status_code == 200
     response = client.get("/book/no_Comp/no_Club")
-    assert response.status_code == 302
+    assert response.status_code == 404
 
 
 def test_purchase_places(client, mocker):
@@ -41,6 +40,13 @@ def test_purchase_places(client, mocker):
     # points are consumed:
     club = mocker_clubs[0]
     assert club.points == 15
+
+    # 10 more is refused (more than 12)
+    response = client.post(
+        '/purchasePlaces',
+        data={'club': "Club_1", 'competition': 'Comp_1', 'places': '10'})
+    assert response.status_code == 200
+    assert club.points == 15  # points remain the same
 
 
 def test_logout(client):

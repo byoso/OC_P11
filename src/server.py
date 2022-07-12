@@ -16,7 +16,8 @@ from flask import (
     request,
     redirect,
     flash,
-    url_for
+    url_for,
+    abort,
 )
 
 
@@ -66,10 +67,7 @@ def book(competition_name, club_name):
             'booking.html', club=club, competition=competition,
             tickets_spent=tickets_spent)
     else:
-        flash("Something went wrong-please try again")
-        return redirect(url_for("index"))
-        # return render_template(
-        #     'welcome.html', club=club, competitions=competitions)
+        abort(404)
 
 
 @app.route('/purchasePlaces', methods=['POST'])
