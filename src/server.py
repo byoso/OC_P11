@@ -2,10 +2,6 @@
 # coding: utf-8
 
 
-from .datas import (
-    Data,
-)
-
 from flask import (
     Flask,
     render_template,
@@ -14,6 +10,13 @@ from flask import (
     flash,
     url_for,
     abort,
+)
+
+from .datas import (
+    Data,
+)
+from .helpers import (
+    date_is_past,
 )
 
 
@@ -58,6 +61,7 @@ def book(competition_name, club_name):
             competition.tickets_spent = {}
             competition.tickets_spent[club.name] = 0
             tickets_spent = 0
+
         return render_template(
             'booking.html', club=club, competition=competition,
             tickets_spent=tickets_spent)
@@ -72,7 +76,16 @@ def purchasePlaces():
                    if comp.name == request.form['competition']][0]
     club = [c for c in data.clubs if c.name == request.form['club']][0]
     try:
+        # no booking if the competition is past:
+        if date_is_past(competition.date):
+            print("DATE IS PAST")
+            flash("Aborted: Impossible to book places in a past competition.")
+            return render_template(
+                'welcome.html', club=club, competitions=data.competitions)
+
         placesRequired = int(request.form['places'])
+        if placesRequired < 1:  # no negative value allowed
+            raise ValueError
     except ValueError:
         placesRequired = 0
         flash('Aborted: invalid value given')

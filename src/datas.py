@@ -7,18 +7,18 @@ import json
 DATA_DIR = os.path.abspath(os.path.dirname(__file__))
 
 
-def loadClubs():
-    with open(os.path.join(DATA_DIR, 'clubs.json')) as c:
-        listOfClubs = json.load(c)['clubs']
-        clubs = [Club(**club) for club in listOfClubs]
-        return clubs
+# def loadClubs():
+#     with open(os.path.join(DATA_DIR, 'clubs.json')) as c:
+#         listOfClubs = json.load(c)['clubs']
+#         clubs = [Club(**club) for club in listOfClubs]
+#         return clubs
 
 
-def loadCompetitions():
-    with open(os.path.join(DATA_DIR, 'competitions.json')) as comps:
-        listOfCompetitions = json.load(comps)['competitions']
-        competitions = [Competition(**comp) for comp in listOfCompetitions]
-        return competitions
+# def loadCompetitions():
+#     with open(os.path.join(DATA_DIR, 'competitions.json')) as comps:
+#         listOfCompetitions = json.load(comps)['competitions']
+#         competitions = [Competition(**comp) for comp in listOfCompetitions]
+#         return competitions
 
 
 class Data:
@@ -55,7 +55,7 @@ class Data:
         return message
 
     def __str__(self):
-        return self
+        return self.__repr__()
 
 
 class Club:
