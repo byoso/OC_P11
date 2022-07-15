@@ -1,4 +1,8 @@
 
+
+"""Data abstraction, should be replaced by an ORM for production"""
+
+
 import os
 import json
 
@@ -13,7 +17,7 @@ class Data:
         clubs_file='clubs.json',
         competitions_file='competitions.json'
     ):
-        self.current_club = None  # improvement
+        self.current_club = None  # replace with authentication for production
         self.clubs_file = clubs_file
         self.competitions_file = competitions_file
         if clubs_file is not None and competitions_file is not None:
