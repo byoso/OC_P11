@@ -102,6 +102,7 @@ def purchasePlaces():
         flash('Aborted: invalid value given')
     tickets_spent = competition.tickets_spent[club.name]
     if int(club.points) >= placesRequired and\
+            placesRequired <= int(competition.numberOfPlaces) and\
             placesRequired + tickets_spent <= 12:
         competition.numberOfPlaces = int(
             competition.numberOfPlaces)-placesRequired
