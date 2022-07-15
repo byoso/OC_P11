@@ -1,0 +1,21 @@
+{% extends "_base.html" %}
+
+{% include "_nav.html" %}
+
+{% block content %}
+
+Liste des clubs:
+
+<ul>
+    {% for club in clubs %}
+    <li>
+        {{club.name}} <br>
+        remaining points: {{ club.points }}
+    </li>
+
+    {% endfor %}
+
+</ul>
+
+
+{% endblock content %}

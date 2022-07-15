@@ -1,31 +1,32 @@
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Booking for {{competition.name}} || GUDLFT</title>
-</head>
-<body>
-    <h2>{{competition.name}}</h2>
-    <p>Places available: {{competition.numberOfPlaces}}</p>
-    <p>You booked {{ tickets_spent }} places in this competition (12 max)</p>
-    <p>Your club has {{ club.points }} points to spend.</p>
+
+{% extends "_base.html" %}
+
+{% include "_nav.html" %}
+
+{% block content %}
+
+<h2>{{competition.name}}</h2>
+<p>Places available: {{competition.numberOfPlaces}}</p>
+<p>You booked {{ tickets_spent }} places in this competition (12 max)</p>
+<p>Your club has {{ club.points }} points to spend.</p>
 
 
-    {% with messages = get_flashed_messages()%}
-    {% if messages %}
-        <ul>
-       {% for message in messages %}
-            <li>{{message}}</li>
-        {% endfor %}
-       </ul>
-    {% endif %}
-    {% endwith %}
+{% with messages = get_flashed_messages()%}
+{% if messages %}
+    <ul>
+    {% for message in messages %}
+        <li>{{message}}</li>
+    {% endfor %}
+    </ul>
+{% endif %}
+{% endwith %}
 
-    <form action="/purchasePlaces" method="post">
-        <input type="hidden" name="club" value="{{ club.name }}">
-        <input type="hidden" name="competition" value="{{ competition.name }}">
-        <label for="places">How many places?</label><input type="number" name="places" id=""/>
-        <button type="submit">Book</button>
-    </form>
-</body>
-</html>
+<form action="/purchasePlaces" method="post">
+    <input type="hidden" name="club" value="{{ club.name }}">
+    <input type="hidden" name="competition" value="{{ competition.name }}">
+    <label for="places">How many places?</label><input type="number" name="places" id=""/>
+    <button type="submit">Book</button>
+</form>
+
+
+{% endblock content %}

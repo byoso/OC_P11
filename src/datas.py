@@ -7,26 +7,13 @@ import json
 DATA_DIR = os.path.abspath(os.path.dirname(__file__))
 
 
-# def loadClubs():
-#     with open(os.path.join(DATA_DIR, 'clubs.json')) as c:
-#         listOfClubs = json.load(c)['clubs']
-#         clubs = [Club(**club) for club in listOfClubs]
-#         return clubs
-
-
-# def loadCompetitions():
-#     with open(os.path.join(DATA_DIR, 'competitions.json')) as comps:
-#         listOfCompetitions = json.load(comps)['competitions']
-#         competitions = [Competition(**comp) for comp in listOfCompetitions]
-#         return competitions
-
-
 class Data:
     def __init__(
         self,
         clubs_file='clubs.json',
         competitions_file='competitions.json'
     ):
+        self.current_club = None  # improvement
         self.clubs_file = clubs_file
         self.competitions_file = competitions_file
         if clubs_file is not None and competitions_file is not None:

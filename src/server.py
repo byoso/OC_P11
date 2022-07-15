@@ -32,18 +32,29 @@ def index():
     return render_template('index.html')
 
 
-@app.route('/showSummary', methods=['POST'])
+@app.route('/showSummary', methods=['POST', 'GET'])
 def showSummary():
     """displays the summary if logged in"""
-    club = [club for club in data.clubs
-            if club.email == request.form['email']]
-    if club:
-        return render_template(
-            'welcome.html', club=club[0],
-            competitions=data.competitions)
-    else:
-        flash(f"Unknown email: '{request.form['email']}'")
-        return redirect(url_for('index'))
+    if request.method == 'POST':
+        club = [club for club in data.clubs
+                if club.email == request.form['email']]
+        if club:
+            data.current_club = club[0]
+            return render_template(
+                'welcome.html', club=club[0],
+                competitions=data.competitions)
+        else:
+            flash(f"Unknown email: '{request.form['email']}'")
+            return redirect(url_for('index'))
+
+    if request.method == 'GET':
+        if data.current_club is not None:
+            return render_template(
+                'welcome.html', club=data.current_club,
+                competitions=data.competitions)
+        else:
+            return redirect(url_for('index'))
+
 
 
 @app.route('/book/<competition_name>/<club_name>')
@@ -110,9 +121,13 @@ def purchasePlaces():
             )
 
 
-# TODO: Add route for points display
+@app.route('/clubs')
+def clubs_display():
+    clubs = data.clubs
+    return render_template("clubs_display.html", clubs=clubs)
 
 
 @app.route('/logout')
 def logout():
+    data.club = None
     return redirect(url_for('index'))
