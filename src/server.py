@@ -56,7 +56,6 @@ def showSummary():
             return redirect(url_for('index'))
 
 
-
 @app.route('/book/<competition_name>/<club_name>')
 def book(competition_name, club_name):
     """displays the booking form"""
@@ -89,7 +88,6 @@ def purchasePlaces():
     try:
         # no booking if the competition is past:
         if date_is_past(competition.date):
-            print("DATE IS PAST")
             flash("Aborted: Impossible to book places in a past competition.")
             return render_template(
                 'welcome.html', club=club, competitions=data.competitions)
