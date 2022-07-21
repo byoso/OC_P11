@@ -7,6 +7,7 @@
 
 from src import server
 from tests.conftest import mocker_data
+from src.server import data
 
 
 class TestServer:
@@ -55,3 +56,7 @@ class TestServer:
     def test_logout(self, client):
         response = client.get('/logout')
         assert response.status_code == 302  # redirection
+
+    def test_clubs_display(self, client):
+        response = client.get('/clubs_display')
+        assert response.status_code == 200

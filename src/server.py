@@ -122,7 +122,7 @@ def purchasePlaces():
             )
 
 
-@app.route('/clubs')
+@app.route('/clubs_display')
 def clubs_display():
     clubs = data.clubs
     return render_template("clubs_display.html", clubs=clubs)
@@ -130,5 +130,5 @@ def clubs_display():
 
 @app.route('/logout')
 def logout():
-    data.club = None
+    data.current_club = None
     return redirect(url_for('index'))
