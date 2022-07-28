@@ -65,8 +65,8 @@ class Competition:
     def __init__(self, **kwargs):
         for kwarg in kwargs:
             setattr(self, kwarg, kwargs[kwarg])
-        if "tickets_spent" not in kwargs:
-            self.tickets_spent = {}
+        if "places_booked" not in kwargs:
+            self.places_booked = {}
 
     def __str__(self) -> str:
         return f"<Competition - {self.name}>"

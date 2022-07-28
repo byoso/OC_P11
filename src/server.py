@@ -18,6 +18,7 @@ from .datas import (
 from .helpers import (
     date_is_past,
 )
+from .settings import PLACE_COST
 
 
 app = Flask(__name__)
@@ -66,15 +67,15 @@ def book(competition_name, club_name):
         club = foundClub[0]
         competition = foundCompetition[0]
         try:
-            tickets_spent = competition.tickets_spent[club.name]
+            places_booked = competition.places_booked[club.name]
         except KeyError:
-            competition.tickets_spent = {}
-            competition.tickets_spent[club.name] = 0
-            tickets_spent = 0
+            competition.places_booked = {}
+            competition.places_booked[club.name] = 0
+            places_booked = 0
 
         return render_template(
             'booking.html', club=club, competition=competition,
-            tickets_spent=tickets_spent)
+            places_booked=places_booked)
     else:
         abort(404)
 
@@ -98,13 +99,13 @@ def purchasePlaces():
     except ValueError:
         placesRequired = 0
         flash('Aborted: invalid value given')
-    tickets_spent = competition.tickets_spent[club.name]
+    places_booked = competition.places_booked[club.name]
     if int(club.points) >= placesRequired and\
             placesRequired <= int(competition.numberOfPlaces) and\
-            placesRequired + tickets_spent <= 12:
+            placesRequired + places_booked <= 12:
         competition.numberOfPlaces = int(
             competition.numberOfPlaces)-placesRequired
-        competition.tickets_spent[club.name] += placesRequired
+        competition.places_booked[club.name] += placesRequired
         club.points = int(club.points) - placesRequired
         if placesRequired != 0:
             flash('Great-booking complete!')
@@ -116,7 +117,7 @@ def purchasePlaces():
             )
         return render_template(
             'booking.html', club=club, competition=competition,
-            tickets_spent=tickets_spent
+            places_booked=places_booked
             )
 
 
