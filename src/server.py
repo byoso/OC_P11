@@ -100,13 +100,13 @@ def purchasePlaces():
         placesRequired = 0
         flash('Aborted: invalid value given')
     places_booked = competition.places_booked[club.name]
-    if int(club.points) >= placesRequired and\
+    if int(club.points) >= placesRequired*PLACE_COST and\
             placesRequired <= int(competition.numberOfPlaces) and\
             placesRequired + places_booked <= 12:
         competition.numberOfPlaces = int(
             competition.numberOfPlaces)-placesRequired
         competition.places_booked[club.name] += placesRequired
-        club.points = int(club.points) - placesRequired
+        club.points = int(club.points) - placesRequired*PLACE_COST
         if placesRequired != 0:
             flash('Great-booking complete!')
         return render_template(

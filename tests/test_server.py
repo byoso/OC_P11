@@ -7,7 +7,7 @@
 
 from src import server
 from tests.conftest import mocker_data
-from src.server import data
+from src.settings import PLACE_COST
 
 
 class TestServer:
@@ -37,6 +37,7 @@ class TestServer:
 
     def test_purchase_places(self, client, mocker):
         mocker.patch.object(server, 'data', mocker_data)
+        # remaining_points = mocker_data.clubs[0].points
         response = client.post(
             '/purchasePlaces',
             data={'club': "Club_1", 'competition': 'Comp_1', 'places': '5'})
@@ -44,14 +45,14 @@ class TestServer:
         assert response.status_code == 200
         # points are consumed:
         club = mocker_data.clubs[0]
-        assert club.points == 15
+        assert club.points == 100 - 5*PLACE_COST
 
         # 10 more is refused (more than 12)
         response = client.post(
             '/purchasePlaces',
             data={'club': "Club_1", 'competition': 'Comp_1', 'places': '10'})
         assert response.status_code == 200
-        assert club.points == 15  # the points remain the same
+        assert club.points == 100 - 5*PLACE_COST  # the points remain the same
 
     def test_logout(self, client):
         response = client.get('/logout')

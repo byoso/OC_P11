@@ -14,7 +14,7 @@ mock_clubs = [
     {
         "name": "Club_1",
         "email": "user@test.com",
-        "points": 20
+        "points": 100
     },
 ]
 mocker_clubs = [Club(**club) for club in mock_clubs]
