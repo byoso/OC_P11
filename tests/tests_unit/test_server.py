@@ -6,7 +6,7 @@
 
 
 from src import server
-from tests.conftest import mocker_data
+from tests.tests_unit.conftest import mocker_data
 from src.settings import PLACE_COST
 
 
@@ -49,11 +49,25 @@ class TestServer:
 
     def test_purchase_places(self, client, mocker):
         mocker.patch.object(server, 'data', mocker_data)
-        # invalid input
+        # invalid input, no points substracted
+        club = mocker_data.clubs[0]
         response = client.post(
             '/purchasePlaces',
-            data={'club': "Club_1", 'competition': 'Comp_1', 'places': 'test'})
+            data={
+                'club': "Club_1",
+                'competition': 'Comp_1', 'places': 'wrong input'})
         assert response.status_code == 200
+        assert club.points == 100
+
+        # input < 1
+        club = mocker_data.clubs[0]
+        response = client.post(
+            '/purchasePlaces',
+            data={
+                'club': "Club_1",
+                'competition': 'Comp_1', 'places': '-12'})
+        assert response.status_code == 200
+        assert club.points == 100
 
         # correct request
         response = client.post(
@@ -72,12 +86,10 @@ class TestServer:
         assert response.status_code == 200
         assert club.points == 100 - 5*PLACE_COST  # the points remain the same
 
-
+    def test_clubs_display(self, client):
+        response = client.get('/clubs_display')
+        assert response.status_code == 200
 
     def test_logout(self, client):
         response = client.get('/logout')
         assert response.status_code == 302  # redirection
-
-    def test_clubs_display(self, client):
-        response = client.get('/clubs_display')
-        assert response.status_code == 200

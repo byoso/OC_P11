@@ -2,7 +2,6 @@ import pytest
 
 from src.server import app
 from src.datas import Club, Competition, Data
-from flask import template_rendered
 
 
 @pytest.fixture
