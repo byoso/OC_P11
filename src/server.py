@@ -69,20 +69,20 @@ def book(competition_name, club_name):
         try:
             places_booked = competition.places_booked[club.name]
         except KeyError:
-            competition.places_booked = {}
             competition.places_booked[club.name] = 0
             places_booked = 0
 
         return render_template(
             'booking.html', club=club, competition=competition,
             places_booked=places_booked)
+
     else:
         abort(404)
 
 
 @app.route('/purchasePlaces', methods=['POST'])
 def purchasePlaces():
-    """Purchasing some places slogic"""
+    """Purchasing some places logic"""
     competition = [comp for comp in data.competitions
                    if comp.name == request.form['competition']][0]
     club = [c for c in data.clubs if c.name == request.form['club']][0]
