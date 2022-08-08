@@ -1,0 +1,58 @@
+============================= test session starts ==============================
+platform linux -- Python 3.6.9, pytest-7.0.1, pluggy-1.0.0 -- /home/byoso/Bureau/OC_P11/gudlft/.env/bin/python3
+cachedir: .pytest_cache
+rootdir: /home/byoso/Bureau/OC_P11/gudlft
+plugins: cov-3.0.0, mock-3.6.1, flask-1.2.0
+collecting ... collected 8 items
+
+tests/test_helpers.py::TestHelpers::test_str_to_date PASSED              [ 12%]
+tests/test_helpers.py::TestHelpers::test_date_is_past PASSED             [ 25%]
+tests/test_server.py::TestServer::test_index PASSED                      [ 37%]
+tests/test_server.py::TestServer::test_showSummary FAILED                [ 50%]
+tests/test_server.py::TestServer::test_book PASSED                       [ 62%]
+tests/test_server.py::TestServer::test_purchase_places PASSED            [ 75%]
+tests/test_server.py::TestServer::test_logout PASSED                     [ 87%]
+tests/test_server.py::TestServer::test_clubs_display PASSED              [100%]
+
+=================================== FAILURES ===================================
+_________________________ TestServer.test_showSummary __________________________
+
+self = <tests.test_server.TestServer object at 0x7ff3b4c83320>
+client = <FlaskClient <Flask 'src.server'>>
+mocker = <pytest_mock.plugin.MockerFixture object at 0x7ff3b4c51588>
+
+    def test_showSummary(self, client, mocker):
+        # POST
+        mocker.patch.object(server, 'data', mocker_data)
+        response = client.post("/showSummary", data={"email": "user@test.com"})
+        assert response.status_code == 200
+    
+        # redirect if wrong email
+        response = client.post(
+            "/showSummary", data={"email": "not_user@test.com"})
+        assert response.status_code == 302
+    
+        # GET
+        mocker.patch.object(server, 'data', mocker_data)
+        response = client.get("/showSummary")
+>       assert response.status_code == 302
+E       assert 200 == 302
+E         +200
+E         -302
+
+tests/test_server.py:35: AssertionError
+
+----------- coverage: platform linux, python 3.6.9-final-0 -----------
+Name              Stmts   Miss  Cover
+-------------------------------------
+src/__init__.py       0      0   100%
+src/datas.py         50     12    76%
+src/helpers.py       10      0   100%
+src/server.py        64      7    89%
+src/settings.py       1      0   100%
+-------------------------------------
+TOTAL               125     19    85%
+
+=========================== short test summary info ============================
+FAILED tests/test_server.py::TestServer::test_showSummary - assert 200 == 302
+========================= 1 failed, 7 passed in 0.18s ==========================

@@ -2,6 +2,7 @@ import pytest
 
 from src.server import app
 from src.datas import Club, Competition, Data
+from flask import template_rendered
 
 
 @pytest.fixture
@@ -10,6 +11,7 @@ def client():
         yield client
 
 
+# Mock data
 mock_clubs = [
     {
         "name": "Club_1",

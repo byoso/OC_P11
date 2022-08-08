@@ -96,6 +96,8 @@ def purchasePlaces():
         placesRequired = int(request.form['places'])
         if placesRequired < 1:  # no negative value allowed
             raise ValueError
+        if not isinstance(placesRequired, int):
+            raise ValueError
     except ValueError:
         placesRequired = 0
         flash('Aborted: invalid value given')
